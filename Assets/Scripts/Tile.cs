@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class Tile : MonoBehaviour
+public class Tile : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 {
     public int x;
     public int y;
@@ -13,12 +13,13 @@ public class Tile : MonoBehaviour
 
     public void OnPointerDown(PointerEventData eventData)
     {
-        startTouchPosition = Input.mousePosition;
+        startTouchPosition = eventData.position;
+        Debug.Log($"Кликнули по фишке с координатами в сетке: ({x}, {y})"); // <-- ДОБАВЬ ЭТО
     }
 
     public void OnPointerUp(PointerEventData eventData)
     {
-        endTouchPosition = Input.mousePosition;
+        endTouchPosition = eventData.position;
         CalculateSwape();
     }
 
@@ -27,26 +28,33 @@ public class Tile : MonoBehaviour
         Vector2 distance = endTouchPosition - startTouchPosition;
         if (distance.magnitude > 50)
         {
+            if (boardController == null)
+            {
+                boardController = Object.FindAnyObjectByType<BoardController>();
+            }
+
+            if (boardController == null) return;
+
             if (Mathf.Abs(distance.x) > Mathf.Abs(distance.y))
             {
                 if (distance.x > 0)
                 {
-                    //swipe right
+                    boardController.MoveTitle(this, Vector2.right);
                 }
                 else
                 {
-                    //swipe left
+                    boardController.MoveTitle(this, Vector2.left);
                 }
             }
             else
             {
                 if (distance.y > 0)
                 {
-                    //swipe up
+                    boardController.MoveTitle(this, Vector2.up);
                 }
                 else
                 {
-                    //swipe down
+                    boardController.MoveTitle(this, Vector2.down);
                 }
             }
         }
