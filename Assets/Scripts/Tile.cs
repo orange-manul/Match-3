@@ -14,7 +14,6 @@ public class Tile : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     public void OnPointerDown(PointerEventData eventData)
     {
         startTouchPosition = eventData.position;
-        Debug.Log($"Кликнули по фишке с координатами в сетке: ({x}, {y})"); // <-- ДОБАВЬ ЭТО
     }
 
     public void OnPointerUp(PointerEventData eventData)
